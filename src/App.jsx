@@ -14,7 +14,7 @@ function App() {
       <div className="h-[80%] w-[95%] sm:w-[400px] border-black border-2 bg-black text-white">
         <nav className="h-[10%] flex justify-between items-center bg-[tomato] p-1">
           <h1 className="font-bold text-[2rem]">Chat Room</h1>{" "}
-          {!user && (
+          {user == null && (
             <div
               onClick={signIn}
               className="bg-blue-700 cursor-pointer px-2 py-1 text-[1.1rem]"
@@ -22,7 +22,7 @@ function App() {
               Sign In With Google
             </div>
           )}
-          {user && <div onClick={logout}>Sign Out</div>}
+          {user != null && <div onClick={logout}>Sign Out</div>}
         </nav>
         <Chatbox />
         <Input />
