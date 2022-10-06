@@ -1,11 +1,17 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext, useEffect } from "react";
 import { auth } from "./firebase";
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 const authContext = createContext();
 
 const AuthContext = ({ children }) => {
-  const [user, setuser] = useState({});
+  const returnedUSer = localStorage.getItem("user");
+  const proccessedUser = returnedUSer ? JSON.parse(returnedUSer) : null;
+  const [user, setuser] = useState(proccessedUser);
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
 
   const signIn = () => {
     const provider = new GoogleAuthProvider();
