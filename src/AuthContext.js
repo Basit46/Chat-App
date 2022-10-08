@@ -1,33 +1,26 @@
-import React, { useState, useContext, createContext, useEffect } from "react";
+import React, { useContext, createContext } from "react";
 import { auth } from "./firebase";
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const authContext = createContext();
 
 const AuthContext = ({ children }) => {
-  const returnedUSer = localStorage.getItem("user");
-  const proccessedUser = returnedUSer ? JSON.parse(returnedUSer) : null;
-  const [user, setuser] = useState(proccessedUser);
-
-  useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(user));
-  }, [user]);
-
   const signIn = () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).then((result) => {
+    signInWithRedirect(auth, provider).then((result) => {
       console.log(result.user);
-      setuser(result.user);
     });
   };
 
+  const [user] = useAuthState(auth);
+  console.log(user);
+
   const logout = () => {
-    signOut(auth).then(() => {
-      setuser(null);
-    });
+    signOut(auth).then(() => {});
   };
   return (
-    <authContext.Provider value={{ user, signIn, logout }}>
+    <authContext.Provider value={{ signIn, logout, user }}>
       {children}
     </authContext.Provider>
   );
